@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="document-list-container">
+    <h1>Your Documents</h1>
+
+    <div class="actions">
+        <a href="{% url 'upload_document' %}" class="btn">Upload New Document</a>
+        <a href="{% url 'create_folder' %}" class="btn">Create New Folder</a>
+    </div>
+
+    <h2>Folders</h2>
+    {% if folders %}
+        <ul>
+            {% for folder in folders %}
+                <li>
+                    {{ folder.name }} 
+                    <a href="{% url 'delete_folder' folder.pk %}" class="delete-link">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No folders available.</p>
+    {% endif %}
+
+    <h2>Documents</h2>
+    {% if documents %}
+        <ul>
+            {% for document in documents %}
+                
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No documents available.</p>
+    {% endif %}
+</div>
+{% endblock %}

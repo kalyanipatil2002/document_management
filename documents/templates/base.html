@@ -1,0 +1,187 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Document Management System{% endblock %}</title>
+
+    <!-- Include Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    
+    <!-- Your custom styles -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <style>
+        /* Reset margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        /* Main image container covering the entire screen */
+        .image-container {
+            height: 100vh; /* Full viewport height */
+            width: 100vw; /* Full viewport width */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            overflow: hidden; /* Hide overflow to prevent scroll bars */
+        }
+
+        /* Single image with animation */
+        .image-container img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover; /* Ensures the image covers the entire container */
+            animation: fadeIn 2s ease-in-out; /* Fade-in animation */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Overlaying content like header and footer */
+        header, footer {
+            position: fixed;
+            width: 100%;
+            z-index: 10; /* Place above the image */
+            text-align: center;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        }
+
+        header {
+            top: 0;
+            height: 10vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        footer {
+            bottom: 0;
+            height: 3vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            position: fixed;
+            top: 10vh;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 20;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .dashboard-content {
+            position: relative;
+            top: 20vh; /* Space for the header */
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+            z-index: 10; /* Ensure it’s above the image */
+        }
+
+        .dashboard-content h2 {
+            margin-top: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="animate__animated animate__fadeInDown">
+        <h1>Document Management System</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            {% if request.path == '/login/' or request.path == '/register/' %}
+                <li><a href="{% url 'login' %}" class="animate__animated animate__slideInLeft">Login</a></li>
+                <li><a href="{% url 'signup' %}" class="animate__animated animate__slideInLeft">Register</a></li>
+            {% elif request.path == '/upload/' %}
+                <li><a href="{% url 'upload_document' %}" class="animate__animated animate__slideInLeft">Upload Document</a></li>
+                <li><a href="{% url 'document_list' %}" class="animate__animated animate__slideInLeft">Document List</a></li>
+               
+            {% elif request.path == '/dashboard/' %}
+                <li><a href="{% url 'upload_document' %}" class="animate__animated animate__slideInLeft">Upload Document</a></li>
+                <li><a href="{% url 'document_list' %}" class="animate__animated animate__slideInLeft">Document List</a></li>
+                <li><a href="{% url 'login' %}" class="animate__animated animate__slideInLeft">login</a></li>
+            {% elif request.path == '/document-list/' %}
+                <li><a href="{% url 'upload_document' %}" class="animate__animated animate__slideInLeft">Upload Document</a></li>
+                <li><a href="{% url 'document_list' %}" class="animate__animated animate__slideInLeft">Document List</a></li>
+                <li><a href="{% url 'view_profile' %}" class="animate__animated animate__slideInLeft">View Profile</a></li>
+            {% elif request.path == '/view-profile/' %}
+                <li><a href="{% url 'upload_document' %}" class="animate__animated animate__slideInLeft">Upload Document</a></li>
+                <li><a href="{% url 'document_list' %}" class="animate__animated animate__slideInLeft">Document List</a></li>
+                <li><a href="{% url 'view_profile' %}" class="animate__animated animate__slideInLeft">View Profile</a></li>
+           
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="animate__animated animate__slideInLeft">Logout</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <div class="image-container">
+        <img src="{% static 'images/pic2.jpg' %}" alt="Featured Image" class="animate__animated animate__fadeIn">
+    </div>
+    
+    <div class="dashboard-content animate__animated animate__fadeInUp">
+        {% block content %}
+        <!-- Dashboard-specific content goes here -->
+        {% endblock %}
+    </div>
+    
+    <footer class="animate__animated animate__fadeIn">
+        <p>&copy; 2024 Document Management System</p>
+    </footer>
+    
+    <!-- Optional: Include JavaScript files -->
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

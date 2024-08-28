@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% block content %}
+    <div class="upload-container">
+        <h1>Upload Document</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="upload-btn">Upload</button>
+        </form>
+        <a href="{% url 'document_list' %}" class="back-link">Back to Document List</a>
+
+    </div>
+{% endblock %}
+
