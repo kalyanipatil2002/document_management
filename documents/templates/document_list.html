@@ -1,37 +1,32 @@
+<!-- my_app/templates/document_list.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="document-list-container">
-    <h1>Your Documents</h1>
-
-    <div class="actions">
-        <a href="{% url 'upload_document' %}" class="btn">Upload New Document</a>
-        <a href="{% url 'create_folder' %}" class="btn">Create New Folder</a>
-    </div>
-
-    <h2>Folders</h2>
-    {% if folders %}
-        <ul>
-            {% for folder in folders %}
-                <li>
-                    {{ folder.name }} 
-                    <a href="{% url 'delete_folder' folder.pk %}" class="delete-link">Delete</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No folders available.</p>
-    {% endif %}
-
-    <h2>Documents</h2>
-    {% if documents %}
-        <ul>
-            {% for document in documents %}
-                
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No documents available.</p>
-    {% endif %}
-</div>
+  <h2>Document List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>File</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for document in documents %}
+        <tr>
+          <td>{{ document.name }}</td>
+          <td><a href="{{ document.file.url }}" target="_blank">View</a></td>
+          <td>
+            <!-- Add actions like download or delete if needed -->
+          
+            <!-- Make sure to create a corresponding view and URL for download -->
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">No documents found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

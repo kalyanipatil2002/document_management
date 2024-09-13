@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import  FolderForm,DocumentUploadForm
+from .forms import  FolderForm,FileForm
 from .models import Document, Folder
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
@@ -12,6 +12,8 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth import login as auth_login 
 from django.contrib.auth.decorators import login_required
 from .models import Document, Folder
+from django.db import IntegrityError
+
 def dashboard(request):
     return render(request, 'dashboard.html')
 
@@ -56,25 +58,38 @@ def signup(request):
 def logout_user(request):
     logout(request)
     return redirect('login') 
+
+# @login_required
+# def upload_document(request):
+#     if request.method == 'POST':
+#         form = FileForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             file = form.save(commit=False)
+#             file.owner = request.user
+#             file.save()
+#             return redirect('file_list')
+#     else:
+#         form = FileForm()
+#     return render(request, 'upload.html', {'form': form})
 @login_required
 def upload_document(request):
     if request.method == 'POST':
-        form = DocumentUploadForm(request.POST, request.FILES)
+        form = FileForm(request.POST, request.FILES)
         if form.is_valid():
             document = form.save(commit=False)
-            document.user = request.user  # Assign the current user
-            document.folder_id = form.cleaned_data['folder_id'].id  # Assign the folder ID directly
+            document.user = request.user  # Set the user
             document.save()
             return redirect('document_list')
     else:
-        form = DocumentUploadForm()
+        form = FileForm()
     return render(request, 'upload.html', {'form': form})
+
+
 
 @login_required
 def document_list(request):
-    folders = Folder.objects.filter(user=request.user)
     documents = Document.objects.filter(user=request.user)
-    return render(request, 'document_list.html', {'folders': folders, 'documents': documents})
+    return render(request, 'document_list.html', {'documents': documents})
 @login_required
 def create_folder(request):
     if request.method == 'POST':

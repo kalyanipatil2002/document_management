@@ -47,24 +47,12 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 
-class DocumentUploadForm(forms.ModelForm):
-    folder_id = forms.ModelChoiceField(
-        queryset=Folder.objects.all(),
-        label="Select Folder",
-        required=True,
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
-
-    class Meta:
-        model = Document
-        fields = ['title', 'file', 'folder_id']  # Make sure 'folder_id' matches the name used in your template
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'file': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
-        }
-
-
 class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
         fields = ['name', 'parent']
+
+class FileForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ['name', 'file', 'folder']

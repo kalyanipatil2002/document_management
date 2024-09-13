@@ -23,21 +23,18 @@ class CustomUser(AbstractUser):
         verbose_name='user permissions',
     )
 class Folder(models.Model):
-    name = models.CharField(max_length=200)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subfolders')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subfolders')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 class Document(models.Model):
-    title = models.CharField(max_length=200)
-    file = models.FileField(upload_to='documents/')
-    description = models.TextField(blank=True, null=True)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    user =models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    folder = models.ForeignKey(Folder, null=True, blank=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=255, default='Unnamed Document')
+    file = models.FileField(upload_to='files/')
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='files', null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return self.name
